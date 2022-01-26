@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Workflow.Tests\Workflow.Tests.csproj" />
+	  <ProjectReference Include="..\Workflow\Workflow.csproj" />
+	</ItemGroup>
+
+</Project>
