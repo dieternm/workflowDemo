@@ -23,11 +23,12 @@
         {
             return operation switch
             {
-                BestellungWorkflowOperation.speichern => BestellungWorkflowState.Angelegt,
+                BestellungWorkflowOperation.speichern when state == BestellungWorkflowState.Start => BestellungWorkflowState.Angelegt,
+                BestellungWorkflowOperation.speichern => state,
                 BestellungWorkflowOperation.versenden => BestellungWorkflowState.InVersand,
                 BestellungWorkflowOperation.beenden => BestellungWorkflowState.Ende,
                 BestellungWorkflowOperation.stornieren => BestellungWorkflowState.Storniert,
-                _ => null,
+                _ => null
             };
         }
 
