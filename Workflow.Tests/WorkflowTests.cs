@@ -33,13 +33,13 @@ namespace Workflow.Tests
         [DataTestMethod]
         [DataRow(WorkflowState.Start, WorkflowOperation.speichern, WorkflowState.Angelegt)]
         [DataRow(WorkflowState.Angelegt, WorkflowOperation.speichern, WorkflowState.Angelegt)]
-        [DataRow(WorkflowState.Storniert, WorkflowOperation.beenden, WorkflowState.Storniert)]
         public void ExecuteOperation(WorkflowState state,  WorkflowOperation operation, WorkflowState expectedState)
         {
             _bestellung.State = state;
 
-            _sut.ExecuteOperation(_bestellung, operation);
+            var wasOperaionSuccessfull = _sut.ExecuteOperation(_bestellung, operation);
 
+            wasOperaionSuccessfull.Should().BeTrue();
             _bestellung.State.Should().Be(expectedState);
         }
 
