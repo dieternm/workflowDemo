@@ -1,22 +1,5 @@
 ﻿namespace Workflow.Tests.Domain.Workflow
 {
-    public enum BestellungWorkflowState
-    {
-        Start,
-        Angelegt,
-        InVersand,
-        Ende,
-        Storniert
-    }
-
-    public enum BestellungWorkflowOperation
-    {
-        speichern,
-        versenden,
-        stornieren,
-        beenden
-    }
-
     public partial class BestellungWorkflow : Workflow<Bestellung, BestellungWorkflowState, BestellungWorkflowOperation>
     {
         protected override BestellungWorkflowState? GetNextState(BestellungWorkflowState state, BestellungWorkflowOperation operation)
