@@ -3,7 +3,7 @@ using Workflow.Tests.Utils;
 
 namespace Workflow.Tests.Domain.Workflow
 {
-    public partial class BestellungWorkflow : Workflow<Bestellung, BestellungWorkflowState, BestellungWorkflowOperation>
+    public partial class BestellungWorkflow
     {
         protected override IEnumerable<PropertyInfo> GetRequiredProperties(Bestellung participant)
         {
