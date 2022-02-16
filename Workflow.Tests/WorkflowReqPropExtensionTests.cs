@@ -14,7 +14,7 @@ namespace Workflow.Tests
         [TestMethod]
         public void ExecuteOperation_RequiredPropertyNotSet_NotExecuted()
         {
-            _bestellung.State = BestellungWorkflowState.Angelegt;
+            _bestellung.State = BestellungWorkflowState.Geprueft;
             _bestellung.Empfänger = null;
 
             var wasOperationExecuted = _sut.ExecuteOperation(_bestellung, BestellungWorkflowOperation.versenden);

@@ -5,6 +5,7 @@
         speichern,
         versenden,
         stornieren,
-        beenden
+        beenden,
+        pruefen
     }
 }

@@ -25,9 +25,8 @@
             if (IsOperationAllowed(participant, operation))
             {
                 participant.State = GetNextState(participant.State, operation)!.Value;
-                return true;
                 // for ReqPropExtension
-                //return ValidateRequiredProperties(participant);
+                return ValidateRequiredProperties(participant);
             }
             return false;
         }

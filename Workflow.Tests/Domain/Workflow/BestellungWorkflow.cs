@@ -11,6 +11,7 @@
                 BestellungWorkflowOperation.versenden => BestellungWorkflowState.InVersand,
                 BestellungWorkflowOperation.beenden => BestellungWorkflowState.Ende,
                 BestellungWorkflowOperation.stornieren => BestellungWorkflowState.Storniert,
+                BestellungWorkflowOperation.pruefen => BestellungWorkflowState.Geprueft,
                 _ => null
             };
         }
@@ -25,10 +26,13 @@
                 case BestellungWorkflowState.Angelegt:
                     yield return BestellungWorkflowOperation.speichern;
                     yield return BestellungWorkflowOperation.stornieren;
-                    yield return BestellungWorkflowOperation.versenden;
+                    yield return BestellungWorkflowOperation.pruefen;
                     break;
                 case BestellungWorkflowState.InVersand:
                     yield return BestellungWorkflowOperation.beenden;
+                    break;
+                case BestellungWorkflowState.Geprueft:
+                    yield return BestellungWorkflowOperation.versenden;
                     break;
                 default:
                     yield break;

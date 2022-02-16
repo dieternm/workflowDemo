@@ -6,6 +6,7 @@
         Angelegt,
         InVersand,
         Ende,
-        Storniert
+        Storniert,
+        Geprueft
     }
 }
