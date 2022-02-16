@@ -5,6 +5,6 @@ namespace Workflow.Tests.Domain
     public class Bestellung : IWorkflowParticipant<BestellungWorkflowState>
     {
         public BestellungWorkflowState State { get; set; }
-        public string? Empfänger { get; set; }
+        public string? Empfaenger { get; set; }
     }
 }

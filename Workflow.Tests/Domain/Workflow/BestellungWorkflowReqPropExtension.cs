@@ -10,7 +10,7 @@ namespace Workflow.Tests.Domain.Workflow
             switch (participant.State)
             {
                 case BestellungWorkflowState.InVersand:
-                    yield return PropertyHelper.GetPropertyInfo((Bestellung b) => b.Empfänger);
+                    yield return PropertyHelper.GetPropertyInfo((Bestellung b) => b.Empfaenger);
                     break;
                 case BestellungWorkflowState.Storniert:
                 default:
