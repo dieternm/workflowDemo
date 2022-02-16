@@ -18,7 +18,7 @@ namespace Workflow.Tests
             {
                 WorkflowOperation.speichern,
                 WorkflowOperation.stornieren,
-                WorkflowOperation.versenden
+                WorkflowOperation.pruefen
             })]
         [DataRow(WorkflowState.Storniert, new WorkflowOperation[] { })]
         public void GetOperations(WorkflowState state, WorkflowOperation[] expectedOperations)
@@ -37,9 +37,9 @@ namespace Workflow.Tests
         {
             _bestellung.State = state;
 
-            var wasOperaionSuccessfull = _sut.ExecuteOperation(_bestellung, operation);
+            var wasOperationSuccessful = _sut.ExecuteOperation(_bestellung, operation);
 
-            wasOperaionSuccessfull.Should().BeTrue();
+            wasOperationSuccessful.Should().BeTrue();
             _bestellung.State.Should().Be(expectedState);
         }
 
