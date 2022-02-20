@@ -25,7 +25,7 @@ namespace Workflow.Tests
         {
             _bestellung.State = state;
 
-            var operations = _sut.GetOperations(_bestellung);
+            var operations = _sut.GetPossibleOperations(_bestellung);
 
             operations.Should().BeEquivalentTo(expectedOperations);
         }

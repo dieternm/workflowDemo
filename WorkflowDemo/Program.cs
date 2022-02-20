@@ -28,7 +28,7 @@ namespace WorkflowDemo
 
         private static void GetOperationsOnly()
         {
-            var operations = _workflow.GetOperations(_participant);
+            var operations = _workflow.GetPossibleOperations(_participant);
             Console.WriteLine("Possible WorkflowOperations:");
             foreach (var operation in operations)
             {
@@ -68,7 +68,7 @@ namespace WorkflowDemo
         private static void PrintPossibleWorkflowOperations()
         {
             Console.WriteLine("Possible WorkflowOperations:");
-            var operations = _workflow.GetOperations(_participant);
+            var operations = _workflow.GetPossibleOperations(_participant);
             foreach (var operation in operations)
             {
                 Console.WriteLine($"  {operation}");
