@@ -21,7 +21,7 @@ namespace Workflow.Tests
                 WorkflowOperation.pruefen
             })]
         [DataRow(WorkflowState.Storniert, new WorkflowOperation[] { })]
-        public void GetOperations(WorkflowState state, WorkflowOperation[] expectedOperations)
+        public void GetPossibleOperations(WorkflowState state, WorkflowOperation[] expectedOperations)
         {
             _bestellung.State = state;
 
