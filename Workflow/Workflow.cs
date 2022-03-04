@@ -7,12 +7,6 @@ namespace Workflow
         where TWorkflowState : struct, Enum
         where TWorkflowOperation : Enum
     {
-        protected abstract TWorkflowState? GetNextState(TWorkflowState state, TWorkflowOperation operation);
-
-        protected abstract IEnumerable<TWorkflowOperation> GetOperations(TWorkflowState state);
-
-        protected virtual IEnumerable<PropertyInfo> GetRequiredProperties(TWorkflowParticipant participant, TWorkflowState state) => Enumerable.Empty<PropertyInfo>();
-
         public IEnumerable<TWorkflowOperation> GetPossibleOperations(TWorkflowParticipant participant)
         {
             var possibleOperationsByState = GetOperations(participant.State);
@@ -20,11 +14,14 @@ namespace Workflow
             return possibleOperationsByRequiredProperties;
         }
 
-        public bool ExecuteOperation(TWorkflowParticipant participant, TWorkflowOperation operation)
+        public bool ExecuteOperation(TWorkflowParticipant participant, TWorkflowOperation operation, Object? parameters = null)
         {
             if (IsOperationAllowed(participant, operation))
             {
-                participant.State = GetNextState(participant.State, operation)!.Value;
+                var nextState = GetNextState(participant.State, operation)!.Value;
+                var actionToInvoke = GetActionToInvoke(participant.State, operation);
+                actionToInvoke.Invoke(participant, parameters);
+                participant.State = nextState;
                 return true;
             }
             return false;
@@ -34,6 +31,17 @@ namespace Workflow
         {
             var possibleOperations = GetPossibleOperations(participant);
             return possibleOperations.Contains(operation);
+        }
+
+        protected abstract TWorkflowState? GetNextState(TWorkflowState state, TWorkflowOperation operation);
+
+        protected abstract IEnumerable<TWorkflowOperation> GetOperations(TWorkflowState state);
+
+        protected virtual IEnumerable<PropertyInfo> GetRequiredProperties(TWorkflowParticipant participant, TWorkflowState state) => Enumerable.Empty<PropertyInfo>();
+
+        protected virtual Func<TWorkflowParticipant, Object?, Task> GetActionToInvoke(TWorkflowState state, TWorkflowOperation operation)
+        {
+            return (TWorkflowParticipant wp, Object? o) => Task.CompletedTask;
         }
 
         private IEnumerable<TWorkflowOperation> GetPossibleOperationsByProperties(TWorkflowParticipant participant, IEnumerable<TWorkflowOperation> allowedOperations)

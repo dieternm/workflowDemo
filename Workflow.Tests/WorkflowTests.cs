@@ -33,7 +33,7 @@ namespace Workflow.Tests
         [DataTestMethod]
         [DataRow(WorkflowState.Start, WorkflowOperation.speichern, WorkflowState.Angelegt)]
         [DataRow(WorkflowState.Angelegt, WorkflowOperation.speichern, WorkflowState.Angelegt)]
-        public void ExecuteOperation(WorkflowState state,  WorkflowOperation operation, WorkflowState expectedState)
+        public void ExecuteOperation_NextState(WorkflowState state,  WorkflowOperation operation, WorkflowState expectedState)
         {
             _bestellung.State = state;
 
@@ -54,6 +54,23 @@ namespace Workflow.Tests
             var isOperationAllowed = _sut.IsOperationAllowed(_bestellung, operation);
 
             isOperationAllowed.Should().Be(expectedIsOperationAllowed);
+        }
+    
+        [TestMethod]
+        public void ExecuteOperation_SpeichernWhenStart_SetEmpfaengerInvoked()
+        {
+            _bestellung.State = WorkflowState.Start;
+            var argument = "TestValue";
+            _sut.ExecuteOperation(_bestellung, WorkflowOperation.speichern, argument);
+            _bestellung.Empfaenger.Should().Be(argument);
+        }
+
+        [TestMethod]
+        public void ExecuteOperation_SpeichernWhenAngelegt_SetEmpfaenger_NotInvoked()
+        {
+            _bestellung.State = WorkflowState.Angelegt;
+            _sut.ExecuteOperation(_bestellung, WorkflowOperation.speichern);
+            _bestellung.Empfaenger.Should().BeNull();
         }
     }
 }

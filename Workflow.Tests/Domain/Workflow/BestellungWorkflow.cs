@@ -54,5 +54,24 @@ namespace Workflow.Tests.Domain.Workflow
                     yield break;
             }
         }
+
+        protected override Func<Bestellung, object?, Task> GetActionToInvoke(BestellungWorkflowState state, BestellungWorkflowOperation operation)
+        {
+            return operation switch
+            {
+                BestellungWorkflowOperation.speichern when state == BestellungWorkflowState.Start => BestellungLogic.SetEmpfaenger,
+                _ => base.GetActionToInvoke(state, operation)
+            };
+        }
+
+        public class BestellungLogic
+        {
+            public static Task SetEmpfaenger(Bestellung b, object? arguments)
+            {
+                var typedArgument = arguments as string;
+                b.Empfaenger = typedArgument;
+                return Task.CompletedTask;
+            }
+        }
     }
 }

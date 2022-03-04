@@ -4,5 +4,7 @@
  2. create enumeration for the operations - Enumeration für die Operationen anlegen
  3. create domain class and implement IWorkflowParticipant - Domänenklasse anlegen und IWorkflowParticipant implementieren
  4. create workflow class for domain class - Workflow-Klasse für Domänenklasse anlegen
-    - Implement abstract method GetOperations - Abstrakte Methode GetOperations implementieren
-    - Implement abstract method GetNextState - Abstrakte Methode GetNextState implementieren
+    - implement abstract method GetOperations - abstrakte Methode GetOperations implementieren
+    - implement abstract method GetNextState - abstrakte Methode GetNextState implementieren
+    - can implement virtual method GetRequiredProperties - virtuelle Methode GetRequiredProperties kann implementiert werden
+    - can implement virtual method GetActionToInvoke - virtuelle Methode GetActionToInvoke kann implementiert werden
