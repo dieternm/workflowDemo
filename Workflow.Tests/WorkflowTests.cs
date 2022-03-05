@@ -72,5 +72,32 @@ namespace Workflow.Tests
             _sut.ExecuteOperation(_bestellung, WorkflowOperation.speichern);
             _bestellung.Empfaenger.Should().BeNull();
         }
+
+        [TestMethod]
+        [DataRow("UnitTest", true)]
+        [DataRow(null, false)]
+        public void ExecuteOperation_RespectsGetRequiredProperties(string empfaenger, bool wasExecuted)
+        {
+            _bestellung.State = WorkflowState.Geprueft;
+            _bestellung.Empfaenger = empfaenger;
+
+            var operations = _sut.GetPossibleOperations(_bestellung);
+            var wasOperationExecuted = _sut.ExecuteOperation(_bestellung, BestellungWorkflowOperation.versenden);
+
+            wasOperationExecuted.Should().Be(wasExecuted);
+        }
+
+        [DataTestMethod]
+        [DataRow("UnitTest", new WorkflowOperation[] { WorkflowOperation.versenden })]
+        [DataRow(null, new WorkflowOperation[] { })]
+        public void GetPossibleOperations_RespectsGetRequiredProperties(string empfaenger, WorkflowOperation[] expectedOperations)
+        {
+            _bestellung.State = WorkflowState.Geprueft;
+            _bestellung.Empfaenger = empfaenger;
+
+            var operations = _sut.GetPossibleOperations(_bestellung);
+
+            operations.Should().BeEquivalentTo(expectedOperations);
+        }
     }
 }
