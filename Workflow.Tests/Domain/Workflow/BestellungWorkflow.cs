@@ -1,21 +1,22 @@
 ﻿using System.Reflection;
+using Workflow.Tests.Logic;
 using Workflow.Tests.Utils;
 
 namespace Workflow.Tests.Domain.Workflow
 {
     public partial class BestellungWorkflow : Workflow<Bestellung, BestellungWorkflowState, BestellungWorkflowOperation>
     {
-        protected override BestellungWorkflowState? GetNextState(BestellungWorkflowState state, BestellungWorkflowOperation operation)
+        protected override (BestellungWorkflowState? nextState, Func<Bestellung, Object?, Task> actionToInvoke) GetNextStateAndActionToInvoke(BestellungWorkflowState state, BestellungWorkflowOperation operation)
         {
             return operation switch
             {
-                BestellungWorkflowOperation.speichern when state == BestellungWorkflowState.Start => BestellungWorkflowState.Angelegt,
-                BestellungWorkflowOperation.speichern => state,
-                BestellungWorkflowOperation.versenden => BestellungWorkflowState.InVersand,
-                BestellungWorkflowOperation.beenden => BestellungWorkflowState.Ende,
-                BestellungWorkflowOperation.stornieren => BestellungWorkflowState.Storniert,
-                BestellungWorkflowOperation.pruefen => BestellungWorkflowState.Geprueft,
-                _ => null
+                BestellungWorkflowOperation.speichern when state == BestellungWorkflowState.Start => (BestellungWorkflowState.Angelegt, BestellungLogic.SetEmpfaenger),
+                BestellungWorkflowOperation.speichern => (state, NoOpAction),
+                BestellungWorkflowOperation.versenden => (BestellungWorkflowState.InVersand, NoOpAction),
+                BestellungWorkflowOperation.beenden => (BestellungWorkflowState.Ende, NoOpAction),
+                BestellungWorkflowOperation.stornieren => (BestellungWorkflowState.Storniert, NoOpAction),
+                BestellungWorkflowOperation.pruefen => (BestellungWorkflowState.Geprueft, NoOpAction),
+                _ => (null, NoOpAction),
             };
         }
 
@@ -52,25 +53,6 @@ namespace Workflow.Tests.Domain.Workflow
                 case BestellungWorkflowState.Storniert:
                 default:
                     yield break;
-            }
-        }
-
-        protected override Func<Bestellung, object?, Task> GetActionToInvoke(BestellungWorkflowState state, BestellungWorkflowOperation operation)
-        {
-            return operation switch
-            {
-                BestellungWorkflowOperation.speichern when state == BestellungWorkflowState.Start => BestellungLogic.SetEmpfaenger,
-                _ => base.GetActionToInvoke(state, operation)
-            };
-        }
-
-        public class BestellungLogic
-        {
-            public static Task SetEmpfaenger(Bestellung b, object? arguments)
-            {
-                var typedArgument = arguments as string;
-                b.Empfaenger = typedArgument;
-                return Task.CompletedTask;
             }
         }
     }

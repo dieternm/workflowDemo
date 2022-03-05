@@ -18,10 +18,9 @@ namespace Workflow
         {
             if (IsOperationAllowed(participant, operation))
             {
-                var nextState = GetNextState(participant.State, operation)!.Value;
-                var actionToInvoke = GetActionToInvoke(participant.State, operation);
+                (var nextState, var actionToInvoke) = GetNextStateAndActionToInvoke(participant.State, operation);
                 actionToInvoke.Invoke(participant, parameters);
-                participant.State = nextState;
+                participant.State = nextState!.Value;
                 return true;
             }
             return false;
@@ -33,22 +32,22 @@ namespace Workflow
             return possibleOperations.Contains(operation);
         }
 
-        protected abstract TWorkflowState? GetNextState(TWorkflowState state, TWorkflowOperation operation);
+        protected abstract (TWorkflowState? nextState, Func<TWorkflowParticipant, Object?, Task> actionToInvoke) GetNextStateAndActionToInvoke(TWorkflowState state, TWorkflowOperation operation);
 
         protected abstract IEnumerable<TWorkflowOperation> GetOperations(TWorkflowState state);
 
         protected virtual IEnumerable<PropertyInfo> GetRequiredProperties(TWorkflowParticipant participant, TWorkflowState state) => Enumerable.Empty<PropertyInfo>();
-
-        protected virtual Func<TWorkflowParticipant, Object?, Task> GetActionToInvoke(TWorkflowState state, TWorkflowOperation operation)
+        
+        protected Task NoOpAction(TWorkflowParticipant b, object? arguments)
         {
-            return (TWorkflowParticipant wp, Object? o) => Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         private IEnumerable<TWorkflowOperation> GetPossibleOperationsByProperties(TWorkflowParticipant participant, IEnumerable<TWorkflowOperation> allowedOperations)
         {
             foreach (var allowedOperation in allowedOperations)
             {
-                var nextState = GetNextState(participant.State, allowedOperation);
+                (var nextState, var _) = GetNextStateAndActionToInvoke(participant.State, allowedOperation);
                 if (nextState.HasValue && ValidateRequiredProperties(participant, nextState.Value))
                 {
                     yield return allowedOperation;
